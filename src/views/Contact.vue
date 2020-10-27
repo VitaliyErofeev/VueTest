@@ -1,9 +1,9 @@
 <template>
-  <div class="home">
+  <div class="main-container">
     <div class="toolbar">
       <span>Edit Contact</span>
     </div>
-    <div class="add-form">
+    <div class="content">
       <form @submit.prevent="submitHandler" class="form">
         <label for="fname">Name</label>
         <input
@@ -11,6 +11,7 @@
           data-name="name"
           type="text"
           placeholder="Name.."
+          @change="changeVal($event)"
         />
 
         <label for="fname">Surname</label>
@@ -19,6 +20,7 @@
           data-name="sname"
           type="text"
           placeholder="SName.."
+          @change="changeVal($event)"
         />
 
         <label for="phone">Phone</label>
@@ -27,6 +29,7 @@
           data-name="phone"
           type="text"
           placeholder="Phone.."
+          @change="changeVal($event)"
         />
 
         <hr />
@@ -167,16 +170,17 @@ export default {
         this.contactFields = temp;
       }
     },
-    addHistory(callback) {
-      this.history.push(this.contactFields);
+    changeVal(e) {
+      window.console.log(e);
+    },
+    addHistory() {
+      //   this.history.push(this.contactFields);
       /* let a = {
         id: 1548,
         fieldName: "fields.test2",
         prev: undefined,
         next: "",
       };*/
-
-      callback();
     },
     addNewField() {
       if (this.key != "" || this.value != "") {

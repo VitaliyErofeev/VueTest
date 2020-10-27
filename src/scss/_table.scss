@@ -1,6 +1,11 @@
 table {
   border-collapse: collapse;
   width: 100%;
+  thead {
+    tr {
+      background-color: #d3d2d2 !important;
+    }
+  }
 }
 
 th,
@@ -10,7 +15,7 @@ td {
 }
 
 tr:hover {
-  background-color: #d3d2d2 !important;
+  background-color: #e8e8e8 !important;
 }
 
 tr:nth-child(even) {

@@ -1,20 +1,20 @@
 <template>
-  <div class="home">
+  <div class="main-container">
     <button class="button circle" @click="openAddForm">
       +
     </button>
-    <div v-if="add" class="add-form">
+    <div v-if="add" class="content">
       <div class="toolbar">
         <span>Add New Contact</span>
       </div>
       <form @submit.prevent="submitHandler" class="form">
-        <label for="fname">Name</label>
+        <label for="name">Name *</label>
         <input v-model="name" type="text" placeholder="Name.." />
 
-        <label for="lname">Surname</label>
+        <label for="sname">Surname *</label>
         <input v-model="sname" type="text" placeholder="SName.." />
 
-        <label for="lname">Phone</label>
+        <label for="phone">Phone</label>
         <input v-model="phone" type="text" placeholder="Phone.." />
 
         <br />
@@ -27,7 +27,6 @@
         <span>Contacts</span>
         <button v-if="!add" @click="openAddForm" class="small">Add</button>
       </div>
-      <!-- <hr /> -->
       <table v-if="contacts.length">
         <thead>
           <tr>
@@ -78,15 +77,17 @@ export default {
   },
   methods: {
     submitHandler() {
-      var contact = {
-        id: Date.now(),
-        name: this.name,
-        sname: this.sname,
-        phone: this.phone,
-        fields: {},
-      };
-      this.$store.dispatch("createContact", contact);
-      this.add = false;
+      if (this.name != "" && this.sname != "") {
+        var contact = {
+          id: Date.now(),
+          name: this.name,
+          sname: this.sname,
+          phone: this.phone,
+          fields: {},
+        };
+        this.$store.dispatch("createContact", contact);
+        this.add = false;
+      } else alert("Enter Name and SName");
     },
     openAddForm() {
       this.name = this.sname = this.phone = "";

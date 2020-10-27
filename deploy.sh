@@ -13,6 +13,6 @@ git init
 git add -A
 git commit -m 'deploy'
 
-git push -f git@github.com:VitaliyErofeev/vuetest.git master:gh-pages
+git push -f https://github.com/VitaliyErofeev/VueTest.git master:gh-pages
 
 cd -
