@@ -24,8 +24,12 @@
     </div>
     <div class="contact-list">
       <div class="toolbar">
+        <i class="mdi-plu" />
         <span>Contacts</span>
         <button v-if="!add" @click="openAddForm" class="small">Add</button>
+        <button v-if="!contacts.length" @click="openAddForm" class="small">
+          Add Demo Data
+        </button>
       </div>
       <table v-if="contacts.length">
         <thead>
@@ -88,6 +92,23 @@ export default {
         this.$store.dispatch("createContact", contact);
         this.add = false;
       } else alert("Enter Name and SName");
+    },
+    addDemoData() {
+      let path = "https://jsonplaceholder.typicode.com/users";
+
+      fetch(path)
+        .then((response) => response.json())
+        .then((contacts) => {
+          for (let i = 0; i < 6; i++) {
+            this.$store.dispatch("createContact", {
+              id: contacts[i].id,
+              name: contacts[i].name.split(" ")[0],
+              sname: contacts[i].name.split(" ")[1],
+              phone: contacts[i].phone,
+              fields: [],
+            });
+          }
+        });
     },
     openAddForm() {
       this.name = this.sname = this.phone = "";

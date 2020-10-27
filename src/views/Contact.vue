@@ -1,6 +1,6 @@
 <template>
   <div class="main-container">
-    <div class="toolbar app">
+    <div class="toolbar">
       <span>Edit Contact</span>
       <button :disabled="!history.length" @click="undoChanges" class="small">
         Undo
