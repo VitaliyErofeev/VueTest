@@ -1,7 +1,10 @@
 <template>
   <div class="main-container">
-    <div class="toolbar">
+    <div class="toolbar app">
       <span>Edit Contact</span>
+      <button :disabled="!history.length" @click="undoChanges" class="small">
+        Undo
+      </button>
     </div>
     <div class="content">
       <form @submit.prevent="submitHandler" class="form">
@@ -11,7 +14,6 @@
           data-name="name"
           type="text"
           placeholder="Name.."
-          @change="changeVal($event)"
         />
 
         <label for="fname">Surname</label>
@@ -20,7 +22,6 @@
           data-name="sname"
           type="text"
           placeholder="SName.."
-          @change="changeVal($event)"
         />
 
         <label for="phone">Phone</label>
@@ -29,12 +30,14 @@
           data-name="phone"
           type="text"
           placeholder="Phone.."
-          @change="changeVal($event)"
         />
 
-        <hr />
-
-        <div v-for="(value, propertyName, i) in fields" :key="i" class="field">
+        <hr v-if="contactFields.length" />
+        <div
+          v-for="(value, propertyName, i) in contactFields"
+          :key="i"
+          class="field"
+        >
           <template v-if="propertyName != editedKey">
             <label :for="propertyName">{{ propertyName }}</label>
             <input type="text" :value="value" />
@@ -78,7 +81,6 @@
             Cancel
           </button>
         </div>
-
         <hr />
 
         <button
@@ -111,18 +113,10 @@ export default {
 
     history: [],
 
-    contactFields: {
-      test1: 35353,
-      dtsss: "fdefdfdf",
-    },
+    contactFields: {},
     newField: false,
   }),
   computed: {
-    fields: {
-      get() {
-        return this.contactFields;
-      },
-    },
     contact() {
       return this.$store.getters.contactById(+this.$route.params.id);
     },
@@ -131,7 +125,7 @@ export default {
     this.name = this.contact.name;
     this.sname = this.contact.sname;
     this.phone = this.contact.phone;
-    //this.fields = this.contact.fields;
+    this.contactFields = this.contact.fields;
   },
   methods: {
     openEditField(prop) {
@@ -142,12 +136,19 @@ export default {
     updateField(success) {
       if (success) {
         var temp = { ...this.contactFields };
+        this.history.push(JSON.parse(JSON.stringify(this.contactFields)));
         delete temp[this.editedKey];
         temp[this.editedField.key] = this.editedField.value;
         this.contactFields = temp;
+        this.editedKey = "";
+        this.editedField = { key: "", value: "" };
+      } else {
+        var result = confirm(`Discard changes ?`);
+        if (result) {
+          this.editedKey = "";
+          this.editedField = { key: "", value: "" };
+        }
       }
-      this.editedKey = "";
-      this.editedField = { key: "", value: "" };
     },
     submitHandler() {
       this.$store.dispatch("updateContact", {
@@ -155,7 +156,7 @@ export default {
         name: this.name,
         sname: this.sname,
         phone: this.phone,
-        fields: this.fields,
+        fields: this.contactFields,
       });
       this.$router.push("/");
     },
@@ -165,30 +166,26 @@ export default {
     removeField(field) {
       var result = confirm(`Delete field: ${field} ?`);
       if (result) {
-        var temp = { ...this.fields };
+        var temp = { ...this.contactFields };
         delete temp[field];
+        this.history.push(JSON.parse(JSON.stringify(this.contactFields)));
         this.contactFields = temp;
       }
     },
-    changeVal(e) {
-      window.console.log(e);
-    },
     addHistory() {
-      //   this.history.push(this.contactFields);
-      /* let a = {
-        id: 1548,
-        fieldName: "fields.test2",
-        prev: undefined,
-        next: "",
-      };*/
+      this.history.push(this.contactFields);
     },
     addNewField() {
       if (this.key != "" || this.value != "") {
-        // this.addHistory(() => {
+        this.history.push(JSON.parse(JSON.stringify(this.contactFields)));
         this.contactFields[this.key] = this.value;
         this.newField = false;
-        // });
       } else alert("Field Name or Value is empty");
+      this.key = "";
+      this.value = "";
+    },
+    undoChanges() {
+      this.contactFields = this.history.pop();
     },
   },
 };

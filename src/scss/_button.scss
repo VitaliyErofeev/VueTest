@@ -22,6 +22,9 @@ button {
     background-color: #007096;
     box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
   }
+  &:disabled {
+    background-color: #a7a7a7;
+  }
 }
 
 button.circle {
