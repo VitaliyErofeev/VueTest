@@ -9,6 +9,6 @@ npm run build
 # переход в каталог сборки
 cd dist
 
-git push -f git@github.com:<USERNAME>/<REPO>.git master:gh-pages
+git push -f git@github.com:VitaliyErofeev/vuetest.git master:gh-pages
 
 cd -
