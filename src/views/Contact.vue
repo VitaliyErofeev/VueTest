@@ -94,8 +94,10 @@
         </button>
         <br />
         <br />
-        <button>Save</button>
-        <button class="cancel-button red" @click="add = false">Cancel</button>
+        <button type="submit">Save</button>
+        <button class="cancel-button red" @click.prevent="cancelEdit">
+          Cancel
+        </button>
       </form>
     </div>
   </div>
@@ -131,6 +133,9 @@ export default {
     this.contactFields = this.contact.fields;
   },
   methods: {
+    cancelEdit() {
+      this.$router.push("/");
+    },
     openEditField(prop) {
       // open field to edit key and value
       this.editedKey = prop;
