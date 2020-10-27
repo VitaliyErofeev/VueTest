@@ -1,0 +1,58 @@
+@import "./input";
+@import "./button";
+@import "./table";
+
+// #app {
+//   margin: 8px;
+// }
+
+.home {
+  .add-form {
+    max-width: 600px;
+    .form {
+      padding: 8px;
+      .cancel-button {
+        margin-left: 8px;
+      }
+      .field {
+        align-items: center;
+        display: flex;
+        label {
+          margin-right: 8px;
+        }
+        input {
+          margin-right: 8px;
+        }
+        button:nth-of-type(1) {
+          margin-right: 4px;
+        }
+      }
+      .new-field-block {
+        align-items: center;
+        display: flex;
+        input {
+          margin: 2px;
+        }
+        > input {
+          margin-right: 8px;
+        }
+        button:nth-of-type(1) {
+          margin-right: 4px;
+        }
+      }
+    }
+  }
+}
+
+.toolbar {
+  display: flex;
+  background-color: #333333;
+  height: 46px;
+  span {
+    display: block;
+    margin: 0;
+    padding: 8px 16px;
+    font-size: 26px;
+    color: white;
+  }
+}
