@@ -71,6 +71,7 @@
           </template>
         </div>
 
+        <!-- block for adding new field for contact -->
         <div v-if="newField" class="new-field-block">
           <input type="text" placeholder="Field Name.." v-model="key" />
           <input type="text" placeholder="Value.." v-model="value" />
@@ -83,9 +84,10 @@
         </div>
         <hr />
 
+        <!-- button for adding new field -->
         <button
           v-show="!newField"
-          @click.prevent="addField"
+          @click.prevent="newField = true"
           class="add-field-btn"
         >
           Add Field
@@ -122,6 +124,7 @@ export default {
     },
   },
   mounted() {
+    // getting values from contact
     this.name = this.contact.name;
     this.sname = this.contact.sname;
     this.phone = this.contact.phone;
@@ -129,11 +132,13 @@ export default {
   },
   methods: {
     openEditField(prop) {
+      // open field to edit key and value
       this.editedKey = prop;
       this.editedField.key = prop;
       this.editedField.value = this.contactFields[prop];
     },
     updateField(success) {
+      // update field for contact
       if (success) {
         var temp = { ...this.contactFields };
         this.history.push(JSON.parse(JSON.stringify(this.contactFields)));
@@ -151,6 +156,7 @@ export default {
       }
     },
     submitHandler() {
+      // updating current contact
       this.$store.dispatch("updateContact", {
         id: this.contact.id,
         name: this.name,
@@ -160,10 +166,8 @@ export default {
       });
       this.$router.push("/");
     },
-    addField() {
-      this.newField = true;
-    },
     removeField(field) {
+      // removing field for current contact
       var result = confirm(`Delete field: ${field} ?`);
       if (result) {
         var temp = { ...this.contactFields };
@@ -172,10 +176,8 @@ export default {
         this.contactFields = temp;
       }
     },
-    addHistory() {
-      this.history.push(this.contactFields);
-    },
     addNewField() {
+      // add field for current contact
       if (this.key != "" || this.value != "") {
         this.history.push(JSON.parse(JSON.stringify(this.contactFields)));
         this.contactFields[this.key] = this.value;

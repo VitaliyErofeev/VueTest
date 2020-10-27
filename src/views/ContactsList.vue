@@ -1,8 +1,6 @@
 <template>
   <div class="main-container">
-    <button class="button circle" @click="openAddForm">
-      +
-    </button>
+    <!-- form for adding new contact -->
     <div v-if="add" class="content">
       <div class="toolbar">
         <span>Add New Contact</span>
@@ -22,12 +20,17 @@
         <button class="cancel-button" @click="add = false">Cancel</button>
       </form>
     </div>
-    <div class="contact-list">
+    <!-- table for contacts -->
+    <div class="contact-list" :class="{ 'disabled-block': add }">
       <div class="toolbar">
         <i class="mdi-plu" />
         <span>Contacts</span>
         <button v-if="!add" @click="openAddForm" class="small">Add</button>
-        <button v-if="!contacts.length" @click="openAddForm" class="small">
+        <button
+          v-if="!contacts.length && !add"
+          @click="addDemoData"
+          class="small"
+        >
           Add Demo Data
         </button>
       </div>
@@ -76,11 +79,13 @@ export default {
   }),
   computed: {
     contacts() {
+      //stored contact list
       return this.$store.getters.contacts;
     },
   },
   methods: {
     submitHandler() {
+      // adding new contact
       if (this.name != "" && this.sname != "") {
         var contact = {
           id: Date.now(),
@@ -91,11 +96,11 @@ export default {
         };
         this.$store.dispatch("createContact", contact);
         this.add = false;
-      } else alert("Enter Name and SName");
+      } else alert("Please enter Name and SName");
     },
     addDemoData() {
+      //adding demo data for empty store
       let path = "https://jsonplaceholder.typicode.com/users";
-
       fetch(path)
         .then((response) => response.json())
         .then((contacts) => {
@@ -105,19 +110,22 @@ export default {
               name: contacts[i].name.split(" ")[0],
               sname: contacts[i].name.split(" ")[1],
               phone: contacts[i].phone,
-              fields: [],
+              fields: {},
             });
           }
         });
     },
     openAddForm() {
+      // open adding form section
       this.name = this.sname = this.phone = "";
       this.add = true;
     },
     openContact(contact) {
+      // click 'Edit' button on contact line
       this.$router.push("/contacts/" + contact.id);
     },
     deleteContact(contact) {
+      // deleting contact
       var result = confirm(
         `Delete contact: ${contact.name + " " + contact.sname}`
       );
