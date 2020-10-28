@@ -94,6 +94,7 @@ export default {
           phone: this.phone,
           fields: {},
         };
+        // calling action from store
         this.$store.dispatch("createContact", contact);
         this.add = false;
       } else alert("Please enter Name and SName");
@@ -127,7 +128,7 @@ export default {
     deleteContact(contact) {
       // deleting contact
       var result = confirm(
-        `Delete contact: ${contact.name + " " + contact.sname}`
+        `Delete contact: ${contact.name + " " + contact.sname} ?`
       );
       if (result) this.$store.dispatch("deleteContact", contact);
     },

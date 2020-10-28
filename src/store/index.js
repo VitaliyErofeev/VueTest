@@ -8,11 +8,13 @@ export default new Vuex.Store({
     contacts: JSON.parse(localStorage.getItem("contacts") || "[]"),
   },
   mutations: {
+    // create contact mutation
     createContact(state, contact) {
       state.contacts.push(contact);
 
       localStorage.setItem("contacts", JSON.stringify(state.contacts));
     },
+    // update contact mutation
     updateContact(state, { id, name, sname, phone, fields }) {
       const contacts = state.contacts.concat();
 
@@ -24,6 +26,7 @@ export default new Vuex.Store({
       state.contacts = contacts;
       localStorage.setItem("contacts", JSON.stringify(state.contacts));
     },
+    // delete contact mutation
     deleteContact(state, id) {
       const contacts = state.contacts.concat();
       const idx = contacts.findIndex((x) => x.id === id);

@@ -2,13 +2,15 @@
   <div class="main-container">
     <div class="toolbar">
       <span>Edit Contact</span>
+      <!-- button for undo changes fields editing -->
       <button :disabled="!history.length" @click="undoChanges" class="small">
         Undo
       </button>
     </div>
     <div class="content">
-      <form @submit.prevent="submitHandler" class="form">
+      <form class="form">
         <label for="fname">Name</label>
+        <!-- contact inputs -->
         <input
           v-model="name"
           data-name="name"
@@ -39,6 +41,7 @@
           class="field"
         >
           <template v-if="propertyName != editedKey">
+            <!-- contact field -->
             <label :for="propertyName">{{ propertyName }}</label>
             <input type="text" :value="value" />
             <button @click.prevent="openEditField(propertyName)" class="small">
@@ -51,6 +54,7 @@
               Remove
             </button>
           </template>
+          <!-- contact field edit mode -->
           <template v-else>
             <input
               type="text"
@@ -62,9 +66,11 @@
               placeholder="Value.."
               v-model="editedField.value"
             />
+            <!-- button for update contact field -->
             <button @click.prevent="updateField(true)" class="small">
               Update
             </button>
+            <!-- button for cancel update contact field -->
             <button @click.prevent="updateField(false)" class="small red">
               Cancel
             </button>
@@ -94,7 +100,9 @@
         </button>
         <br />
         <br />
-        <button type="submit">Save</button>
+        <!-- button for save contact -->
+        <button type="submit" @click.prevent="submitHandler">Save</button>
+        <!-- button for cancel changes and go to contact list -->
         <button class="cancel-button red" @click.prevent="cancelEdit">
           Cancel
         </button>
@@ -130,7 +138,7 @@ export default {
     this.name = this.contact.name;
     this.sname = this.contact.sname;
     this.phone = this.contact.phone;
-    this.contactFields = this.contact.fields;
+    this.contactFields = { ...this.contact.fields };
   },
   methods: {
     cancelEdit() {
@@ -145,13 +153,16 @@ export default {
     updateField(success) {
       // update field for contact
       if (success) {
-        var temp = { ...this.contactFields };
-        this.history.push(JSON.parse(JSON.stringify(this.contactFields)));
-        delete temp[this.editedKey];
-        temp[this.editedField.key] = this.editedField.value;
-        this.contactFields = temp;
-        this.editedKey = "";
-        this.editedField = { key: "", value: "" };
+        // check for exist field
+        if (!this.checkKeyExist(this.editedKey)) {
+          var temp = { ...this.contactFields }; // creating temp variable for contact fields
+          this.history.push(JSON.parse(JSON.stringify(this.contactFields))); //adding history
+          delete temp[this.editedKey]; // delete prop (field)
+          temp[this.editedField.key] = this.editedField.value; // adding new prop (field)
+          this.contactFields = temp;
+          this.editedKey = "";
+          this.editedField = { key: "", value: "" };
+        } else alert(`Field with key ${this.editedKey} already exist`);
       } else {
         var result = confirm(`Discard changes ?`);
         if (result) {
@@ -181,17 +192,28 @@ export default {
         this.contactFields = temp;
       }
     },
+    checkKeyExist(key) {
+      for (var prop in this.contactFields) {
+        if (prop === key) return true;
+      }
+      return false;
+    },
     addNewField() {
-      // add field for current contact
-      if (this.key != "" || this.value != "") {
-        this.history.push(JSON.parse(JSON.stringify(this.contactFields)));
-        this.contactFields[this.key] = this.value;
-        this.newField = false;
-      } else alert("Field Name or Value is empty");
-      this.key = "";
-      this.value = "";
+      // check if exist field (key)
+      if (!this.checkKeyExist(this.key)) {
+        // add field for current contact
+        this.checkKeyExist();
+        if (this.key != "" || this.value != "") {
+          this.history.push(JSON.parse(JSON.stringify(this.contactFields)));
+          this.contactFields[this.key] = this.value;
+          this.newField = false;
+        } else alert("Field Name or Value is empty");
+        this.key = "";
+        this.value = "";
+      } else alert(`Field with key ${this.key} already exist`);
     },
     undoChanges() {
+      // getting previous fields state from history
       this.contactFields = this.history.pop();
     },
   },
