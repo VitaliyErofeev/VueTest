@@ -1,24 +1,26 @@
 <template>
   <div class="main-container">
     <!-- form for adding new contact -->
-    <div v-if="add" class="content">
-      <div class="toolbar">
-        <span>Add New Contact</span>
+    <div v-if="add" class="modal">
+      <div>
+        <div class="toolbar">
+          <span>Add New Contact</span>
+        </div>
+        <form @submit.prevent="submitHandler" class="form">
+          <label for="name">Name *</label>
+          <input v-model="name" type="text" placeholder="Name.." />
+
+          <label for="sname">Surname *</label>
+          <input v-model="sname" type="text" placeholder="SName.." />
+
+          <label for="phone">Phone</label>
+          <input v-model="phone" type="text" placeholder="Phone.." />
+
+          <br />
+          <button type="submit">Add</button>
+          <button class="cancel-button red" @click="add = false">Cancel</button>
+        </form>
       </div>
-      <form @submit.prevent="submitHandler" class="form">
-        <label for="name">Name *</label>
-        <input v-model="name" type="text" placeholder="Name.." />
-
-        <label for="sname">Surname *</label>
-        <input v-model="sname" type="text" placeholder="SName.." />
-
-        <label for="phone">Phone</label>
-        <input v-model="phone" type="text" placeholder="Phone.." />
-
-        <br />
-        <button type="submit">Add</button>
-        <button class="cancel-button" @click="add = false">Cancel</button>
-      </form>
     </div>
     <!-- table for contacts -->
     <div class="contact-list" :class="{ 'disabled-block': add }">
